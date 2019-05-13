@@ -12,6 +12,10 @@
             "path" : "pages/me/me",
             "style" : {}
         }
+        ,{
+            "path" : "pages/test/test",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -44,6 +48,10 @@
 				"iconPath":"static/img/tabBaricon/me.png",
 				"selectedIconPath":"static/img/tabBaricon/me_selected.png"
 
+			},
+			{
+				"pagePath":"pages/test/test",
+				"text":"测试"		
 			}
 		]
 	}

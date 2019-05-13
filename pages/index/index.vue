@@ -1,6 +1,13 @@
 <template>
-	<view class="">
-		首页
+	<view class="page">
+		<swiper :indicator-dots="true" :autoplay="true" class="heros">
+			<swiper-item>
+				<image src="../../static/img/heros/swiper1.jpg" class="heros"></image>
+			</swiper-item>
+			<swiper-item>
+				<image src="../../static/img/heros/swiper2.jpg" class="heros"></image>
+			</swiper-item>
+		</swiper>
 	</view>
 </template>
 
@@ -21,5 +28,10 @@
 </script>
 
 <style>
-
+	@import url("index.css");
+/* 	.heros{
+		width: 100%;
+		height:440upx ;
+	}
+	 */
 </style>
