@@ -1,13 +1,5 @@
 <template name="movieStar">
 	<view class="movie-score-wapper">
-		<!-- <image src="../../static/icos/star-yellow.png" class="star-icon"></image>
-		<image src="../../static/icos/star-yellow.png" class="star-icon"></image>
-		<image src="../../static/icos/star-yellow.png" class="star-icon"></image>
-		<image src="../../static/icos/star-yellow.png" class="star-icon"></image>
-		<image src="../../static/icos/star-gray.png" class="star-icon"></image>
-		<view class="movie-score">
-			9.1
-		</view> -->
 		<!-- 根据分数分配黄色和灰色星星的数量 -->
 		<image v-for="x in yellowScore"
 			src="/static/icos/star-yellow.png" class="star-icon"></image>
@@ -51,20 +43,20 @@
 </script>
 
 <style>
-.movie-score-wapper{
-	display: flex;
-	flex-direction: row;
-}
+	.movie-score-wapper{
+		display: flex;
+		flex-direction: row;
+	}
 
-.star-icon{
-	width: 20upx;
-	height: 20upx;
-	margin-top: 6upx;
-}
+	.star-icon{
+		width: 20upx;
+		height: 20upx;
+		margin-top: 6upx;
+	}
 
-.movie-score{
-	font-size: 12px;
-	color: gray;
-	margin-left: 8upx;
-}
+	.movie-score{
+		font-size: 12px;
+		color: gray;
+		margin-left: 8upx;
+	}
 </style>
