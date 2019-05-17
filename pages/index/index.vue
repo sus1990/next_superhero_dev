@@ -67,7 +67,7 @@
 		</view>
 		
 		<view class="page-block guess-u-like">
-			<view class="single-like">
+			<!-- <view class="single-like">
 				<image src="/static/poster/civilwar.jpg" class="like-poster"></image>
 				
 				<view class="movie-desc">
@@ -83,6 +83,27 @@
 						点赞
 					</view>
 					<view :animation="animationData" class="praise-me animation-opacity">
+						+1
+					</view>
+				</view>
+			</view> -->
+			
+			<view class="single-like"  v-for="(item,index) in guessULikeList">
+				<image :src="item.cover" class="like-poster"></image>
+				
+				<view class="movie-desc">
+					<view class="movie-title">{{item.name}}</view>
+					<movieStar :innerScore="item.score" showNum="0"></movieStar>
+					<view class="movie-info">{{item.basicInfo}}</view>
+					<view class="movie-info">{{item.releaseDate}}</view>
+			
+				</view>
+				<view class="movie-oper" :data-index="index" @click="praiseMe">
+					<image src="/static/icos/praise.png" class="praise-icon"></image>
+					<view class="praise-me">
+						点赞
+					</view>
+					<view :animation="animationDataArray[index]" class="praise-me animation-opacity">
 						+1
 					</view>
 				</view>
@@ -105,6 +126,11 @@
 				heroList: [],
 				heroHotList:[],
 				heroTrailerList: [],
+				guessULikeList: [],
+				animationDataArray: [
+					{},{},{},{},{}
+				],
+				// 这里5个是因为API接口随机返回5条数据
 				animationData : {}
 			}
 		},
@@ -118,7 +144,10 @@
 			// 通过挂载到main.js中变量值
 			var serverUrl = me.serverUrl
 			
+			// app+ 是ios、android ，mp-weixin 是微信小程序
+			// #ifdef APP-PLUS || MP-WEIXIN
 			this.animation = uni.createAnimation() ;
+			// #endif
 			
 			// 获取轮播图数据
 			uni.request({
@@ -152,8 +181,7 @@
 			uni.request({
 				url: serverUrl+'/index/movie/hot?qq=649252367&type=trailer', //仅为示例，并非真实接口地址。
 				method:"POST",			
-				success: (res) => {
-					console.log(res.data);					
+				success: (res) => {			
 					// 判断status是否为200
 					if (res.data.status==200) {
 						var heroTrailerList = res.data.data;
@@ -161,27 +189,55 @@
 					}
 					this.text = 'request success';
 				}
-			});			
+			});		
+
+			// 随机获取点赞清单
+			uni.request({
+				url: serverUrl+'/index/guessULike?qq=649252367', //仅为示例，并非真实接口地址。
+				method:"POST",			
+				success: (res) => {
+					// console.log(res.data);					
+					// 判断status是否为200
+					if (res.data.status==200) {
+						var guessULikeList = res.data.data;
+						me.guessULikeList = guessULikeList
+					}
+					this.text = 'request success';
+				}
+			});					
 		
 		},
 		methods: {
 			// 点赞实现动画效果
-			praiseMe(){
+			praiseMe(e){
+				// #ifdef APP-PLUS || MP-WEIXIN
+
+				var index = e.currentTarget.dataset.index;
+				// console.log(index)
+				// return;
+				
 				// 构建动画数据，并且通过step来表示这组动画的完成
 				this.animation.translateY(-60).opacity(1).step({
 					duration: 300
 				});
 				//导出动画数据到view组件
-				this.animationData = this.animation.export();
+				// this.animationData = this.animation.export();
+				this.animationData = this.animation;
+				this.animationDataArray[index] = this.animationData.export();
 				
 				// 还原动画
 				setTimeout(function(){
 					this.animation.translateY(0).opacity(0).step({
 					duration: 0
 				});
-				this.animationData = this.animation.export();
+				// this.animationData = this.animation.export();
+				this.animationData = this.animation;
+				this.animationDataArray[index] = this.animationData.export();
+
 
 				}.bind(this),500)
+				
+			// #endif
 			}
 
 		},
@@ -191,6 +247,7 @@
 			movieStar			
 		}
 	}
+
 </script>
 
 <style>

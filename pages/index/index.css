@@ -110,6 +110,9 @@
 .movie-info{
 	color: #808080;
 	font-size: 14px;
+/* 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis; */
 }
 
 .movie-oper{
