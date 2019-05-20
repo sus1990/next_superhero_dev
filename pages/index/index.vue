@@ -4,7 +4,9 @@
 		<!-- 轮播图 start -->
 		<swiper :indicator-dots="true" :autoplay="true" class="heros">		
 			<swiper-item v-for="item in heroList">
-				<image :src="item.image" class="heros"></image>
+				<navigator open-type="navigate" :url="'/pages/movie/movie?trailerID=' +item.movieId">
+					<image :src="item.image" class="heros"></image>
+				</navigator>
 			</swiper-item>			
 		</swiper>
 		<!-- 轮播图 end -->
@@ -22,14 +24,16 @@
 		
 		<scroll-view scroll-x="true" class="page-block hot">
 			<view class="single-poster" v-for="item in heroHotList">
-				<view class="poster-wapper">
-					<image :src="item.cover" 
-					class="poster"></image>
-					<view class="movie-name">
-						{{item.name}}
+				<navigator open-type="navigate" :url="'/pages/movie/movie?trailerID=' +item.id">								
+					<view class="poster-wapper">					
+						<image :src="item.cover" 
+						class="poster"></image>
+						<view class="movie-name">
+							{{item.name}}
+						</view>
+						<movieStar :innerScore="item.score" showNum="1"></movieStar>
 					</view>
-					<movieStar :innerScore="item.score" showNum="1"></movieStar>
-				</view>
+				</navigator>
 			</view>
 		</scroll-view>
 		<!-- 热门超英 end -->
@@ -67,36 +71,19 @@
 		</view>
 		
 		<view class="page-block guess-u-like">
-			<!-- <view class="single-like">
-				<image src="/static/poster/civilwar.jpg" class="like-poster"></image>
-				
-				<view class="movie-desc">
-					<view class="movie-title">蝙蝠侠蝙蝠侠蝙蝠侠蝠蝠蝠</view>
-					<movieStar :innerScore="9" showNum="0"></movieStar>
-					<view class="movie-info">20169494 美国</view>
-					<view class="movie-info">主演</view>
-
-				</view>
-				<view class="movie-oper" @click="praiseMe">
-					<image src="/static/icos/praise.png" class="praise-icon"></image>
-					<view class="praise-me">
-						点赞
-					</view>
-					<view :animation="animationData" class="praise-me animation-opacity">
-						+1
-					</view>
-				</view>
-			</view> -->
 			
 			<view class="single-like"  v-for="(item,index) in guessULikeList">
-				<image :src="item.cover" class="like-poster"></image>
+				
+				<navigator open-type="navigate" :url="'/pages/movie/movie?trailerID=' +item.id">	
+					<image :src="item.cover" class="like-poster"></image>
+				</navigator>
+				
 				
 				<view class="movie-desc">
 					<view class="movie-title">{{item.name}}</view>
 					<movieStar :innerScore="item.score" showNum="0"></movieStar>
 					<view class="movie-info">{{item.basicInfo}}</view>
-					<view class="movie-info">{{item.releaseDate}}</view>
-			
+					<view class="movie-info">{{item.releaseDate}}</view>			
 				</view>
 				<view class="movie-oper" :data-index="index" @click="praiseMe">
 					<image src="/static/icos/praise.png" class="praise-icon"></image>
@@ -138,6 +125,10 @@
 		onUnload() {
 			//页面卸载的时候，清除动画数据
 			this.animationData = {};
+		},
+		// 监听下拉事件
+		onPullDownRefresh() {
+			this.refresh();
 		},
 		onLoad() {
 			var me = this;
@@ -192,28 +183,59 @@
 			});		
 
 			// 随机获取点赞清单
-			uni.request({
-				url: serverUrl+'/index/guessULike?qq=649252367', //仅为示例，并非真实接口地址。
-				method:"POST",			
-				success: (res) => {
-					// console.log(res.data);					
-					// 判断status是否为200
-					if (res.data.status==200) {
-						var guessULikeList = res.data.data;
-						me.guessULikeList = guessULikeList
-					}
-					this.text = 'request success';
-				}
-			});					
+			// uni.request({
+			// 	url: serverUrl+'/index/guessULike?qq=649252367', //仅为示例，并非真实接口地址。
+			// 	method:"POST",			
+			// 	success: (res) => {
+			// 		// console.log(res.data);					
+			// 		// 判断status是否为200
+			// 		if (res.data.status==200) {
+			// 			var guessULikeList = res.data.data;
+			// 			me.guessULikeList = guessULikeList
+			// 		}
+			// 		this.text = 'request success';
+			// 	}
+			// });
+			me.refresh()
+				
 		
 		},
 		methods: {
+			refresh(){
+				var me = this;
+				var serverUrl = me.serverUrl;
+				uni.showLoading({
+					mask: true //获取数据时，禁用其他动作
+				})
+										
+				uni.request({
+					url: serverUrl+'/index/guessULike?qq=649252367', //仅为示例，并非真实接口地址。
+					method:"POST",			
+					success: (res) => {
+						// console.log(res.data);					
+						// 判断status是否为200
+						if (res.data.status==200) {
+							var guessULikeList = res.data.data;
+							me.guessULikeList = guessULikeList
+						}
+						this.text = 'request success';
+					},
+					complete: () => {
+						uni.stopPullDownRefresh();
+						uni.hideLoading();
+					}
+				});				
+			},
+			
+			
+			
+			
 			// 点赞实现动画效果
 			praiseMe(e){
 				// #ifdef APP-PLUS || MP-WEIXIN
 
 				var index = e.currentTarget.dataset.index;
-				// console.log(index)
+				console.log(index)
 				// return;
 				
 				// 构建动画数据，并且通过step来表示这组动画的完成
@@ -233,8 +255,6 @@
 				// this.animationData = this.animation.export();
 				this.animationData = this.animation;
 				this.animationDataArray[index] = this.animationData.export();
-
-
 				}.bind(this),500)
 				
 			// #endif

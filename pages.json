@@ -5,12 +5,16 @@
 			"style": {
 				"app-plus": {
                     "titleNView": false //禁用原生导航栏
-                }
+                },
+				"enablePullDownRefresh": true // 开启下拉刷新 
 			}
+			
 		}
 	    ,{
             "path" : "pages/search/search",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "搜索预告片"		
+			}
         }
         ,{
             "path" : "pages/me/me",
@@ -20,6 +24,10 @@
             "path" : "pages/test/test",
             "style" : {}
         }
+        ,{
+            "path" : "pages/movie/movie",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -27,6 +35,7 @@
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
+	// 导航栏
 	"tabBar":{
 		"color" : "#bfbfbf",
 		"selectedColor" : "#515151",
@@ -52,10 +61,6 @@
 				"iconPath":"static/img/tabBaricon/me.png",
 				"selectedIconPath":"static/img/tabBaricon/me_selected.png"
 
-			},
-			{
-				"pagePath":"pages/test/test",
-				"text":"测试"		
 			}
 		]
 	}

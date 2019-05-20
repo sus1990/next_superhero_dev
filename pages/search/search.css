@@ -1,0 +1,50 @@
+/* 搜索框 stat */
+.search-block{
+	background-color: #F8F8F8;
+	display: flex;
+	flex-direction: row;
+	padding: 0upx 20upx 20upx 20upx;
+	/* 固定搜索栏 */
+	position: fixed;
+	top: 100;
+	z-index: 2000;
+	
+}
+.search-icon{
+	width:40upx ;
+	height:40upx ;
+}
+.search-txt{
+	font-size: 14px;
+	background-color: #eaeaea;
+	height: 60upx;
+	width: 650upx;
+}
+.search-icon-wapper{
+	background-color: #eaeaea;
+	/* 图标外层这样设置，可以使其居中 */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 0upx 10upx;
+}
+/* 搜索框 end */
+
+/* 电影列表 start */
+.poster{
+	width: 200upx;
+	height: 270upx;
+}
+.movie-list{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start; // 从左到右排序
+	flex-wrap: wrap; //换行
+	
+	padding: 100upx 10upx 0upx 10upx;
+}
+
+.movie-wapper{
+	padding: 10upx 20upx;
+}
+/* 电影列表 end */
