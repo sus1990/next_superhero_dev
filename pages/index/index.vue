@@ -1,6 +1,6 @@
 <template>
 	<view class="page">	
-		<!-- ----------------------------------- -->
+		
 		<!-- 轮播图 start -->
 		<swiper :indicator-dots="true" :autoplay="true" class="heros">		
 			<swiper-item v-for="item in heroList">
@@ -10,7 +10,7 @@
 			</swiper-item>			
 		</swiper>
 		<!-- 轮播图 end -->
-		<!-- ----------------------------------- -->		
+
 		<!-- 热门超英 start -->
 		<view class="page-block super-hot">
 			<view class="hot-title-wapper">
@@ -37,7 +37,7 @@
 			</view>
 		</scroll-view>
 		<!-- 热门超英 end -->
-		<!-- ----------------------------------- -->		
+		
 		<!-- 预告片 start -->
 		<view class="page-block super-hot">
 			<view class="hot-title-wapper">
@@ -58,7 +58,7 @@
 				controls></video>
 		</view>
 		<!-- 预告片 end -->
-		<!-- ----------------------------------- -->	
+			
 		<!-- 猜你喜欢 start -->
 		<view class="page-block super-hot">
 			<view class="hot-title-wapper">
@@ -74,10 +74,12 @@
 			
 			<view class="single-like"  v-for="(item,index) in guessULikeList">
 				
+				<!-- 跳转到详情 start -->
 				<navigator open-type="navigate" :url="'/pages/movie/movie?trailerID=' +item.id">	
 					<image :src="item.cover" class="like-poster"></image>
 				</navigator>
-				
+				<!-- 跳转到详情 end -->
+
 				
 				<view class="movie-desc">
 					<view class="movie-title">{{item.name}}</view>
@@ -85,6 +87,7 @@
 					<view class="movie-info">{{item.basicInfo}}</view>
 					<view class="movie-info">{{item.releaseDate}}</view>			
 				</view>
+				
 				<view class="movie-oper" :data-index="index" @click="praiseMe">
 					<image src="/static/icos/praise.png" class="praise-icon"></image>
 					<view class="praise-me">
@@ -98,7 +101,7 @@
 		</view>
 				
 		<!-- 猜你喜欢 end -->
-		<!-- ----------------------------------- -->			
+		 
 	</view>
 </template>
 
@@ -125,11 +128,13 @@
 		onUnload() {
 			//页面卸载的时候，清除动画数据
 			this.animationData = {};
+			this.animationDataArray = [] ;
 		},
 		// 监听下拉事件
 		onPullDownRefresh() {
 			this.refresh();
 		},
+		
 		onLoad() {
 			var me = this;
 			// 通过挂载到main.js中变量值
@@ -200,6 +205,7 @@
 				
 		
 		},
+		
 		methods: {
 			refresh(){
 				var me = this;

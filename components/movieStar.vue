@@ -29,6 +29,7 @@
 		
 		// 生命周期，组件完成后调用
 		created() {
+			// console.log(innerScore)
 			var tempScore = 0;
 			if(this.innerScore != null && this.innerScore != undefined && this.innerScore != ''){
 				tempScore = this.innerScore

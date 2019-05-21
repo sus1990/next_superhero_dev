@@ -2,7 +2,7 @@
 	export default {
 		// 暂时不用先注释
 		// onLaunch: function() {
-		// 	console.log('App Launch')
+		// 	console.log('App Launch')0
 		// },
 		// onShow: function() {
 		// 	console.log('App Show')
@@ -23,5 +23,13 @@
 	}
 	.page-block{
 		background-color: #ffffff;
+	}
+	
+	.line-wapper{
+		padding: 0upx 20upx;
+	}
+	.line{
+		height: 1px;
+		background-color: #DBDBDA;
 	}
 </style>
