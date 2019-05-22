@@ -13,8 +13,13 @@
 
 		<!-- 影片信息 start -->
 		<view class="movie-info">
-			<image :src="MovieInfo.cover" class="poster">				
-			</image>
+			<navigator :url="'/pages/cover/cover?coverLink=' + MovieInfo.cover">
+				<image 
+					:src="MovieInfo.cover" 
+					class="poster">				
+				</image>								
+			</navigator>
+
 			
 			<view class="movie-desc">
 				<view class="basic-title">{{MovieInfo.name}}</view>
@@ -65,20 +70,26 @@
 		<view class="scroll-block">
 			<view class="plots-title">演职人员</view>
 			<scroll-view scroll-x class="scroll-list">
-				<view class="actor-wapper" v-for="item in  directArray">
+				<view class="actor-wapper" v-for="(item,directIndex) in  directArray">
 					<image 
 					:src="item.photo" 
 					mode="aspectFill"
-					class="actor-img"></image>
+					class="actor-img"
+					@click="lookStaff"
+					:data-staffIndex="directIndex"
+					></image>
 					<view class="actor-name">{{item.name}}</view>
 					<view class="actor-role">{{item.actName}}</view>
 				</view>
 
-				<view class="actor-wapper" v-for="item in actorArray">
+				<view class="actor-wapper" v-for="(item,actorIndex) in actorArray">
 					<image 
 					:src="item.photo" 
 					mode="aspectFill"
-					class="actor-img"></image>
+					class="actor-img"
+					@click="lookStaff"
+					:data-staffIndex="actorIndex + directArray.length"					
+					></image>
 					<view class="actor-name">{{item.name}}</view>
 					<view class="actor-role">{{item.actName}}</view>
 				</view>				
@@ -92,10 +103,13 @@
 			<view class="plots-title">剧照</view>
 			<scroll-view scroll-x class="scroll-list">
 				<image 
-				v-for="item in plotPicArray" 
-				:src="item" 
+				v-for="(img, imgIndex) in plotPicArray" 
+				:src="img" 
 				mode="aspectFill"
-				class="plot-img"></image>
+				class="plot-img"
+				@click="lookMe"
+				:data-imgIndex="imgIndex"
+				></image>
 			</scroll-view>
 		</view>
 		<!-- 剧照 end -->
@@ -120,6 +134,13 @@
 			var me = this;
 			var serverUrl = me.serverUrl;
 			me.params = params;
+			
+			// 修改导航栏属性
+			uni.setNavigationBarColor({
+				frontColor:"#ffffff",
+				backgroundColor:"#000000"
+			})
+			
 			// 获取电影详情
 			uni.request({
 				url: serverUrl + '/search/trailer/' + params.trailerID + '?qq=649252367', 
@@ -133,7 +154,6 @@
 						// 转换剧照字符串为json
 						var plotPicArray = JSON.parse(MovieInfo.plotPics)
 						me.plotPicArray = plotPicArray;
-						console.log(plotPicArray)
 					}
 				}
 			});
@@ -166,8 +186,85 @@
 			
 		},
 		
-		methods: {
+		onShareAppMessage() {
+			var me = this;
+			return {
+				title: me.MovieInfo.name,
+				path: "/pages/movie/movie?trailerID" + me.params.trailerID
+			}
 		},
+		
+		// 监听导航栏的按钮事件
+		onNavigationBarButtonTap(e) {
+			var me = this;
+			var index = e.index;
+			
+			var MovieInfo = me.MovieInfo;
+
+			var name = MovieInfo.name
+			var cover = MovieInfo.cover
+			var poster = MovieInfo.poster
+			var trailerID = me.params.trailerID
+			
+			console.log(MovieInfo)
+			// debugger;
+			if (index == 0) {
+				// uni.share({
+				// 	provider: "weixin",
+				// 	scene: "WXSenceTimeline",
+				// 	type: 0,
+				// 	path: "/pages/movie/movie?trailerID=" + trailerID,
+				// 	title: "超英",
+				// 	summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
+				// 	imageUrl: cover,
+				// 	success: function (res) {
+				// 		console.log("success:" + JSON.stringify(res));
+				// 	}
+				// });		
+				uni.share({
+					provider: "weixin",
+					scene: "WXSenceTimeline",
+					type: 0,
+					href: "http://uniapp.dcloud.io/",
+					title: "uni-app分享",
+					summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
+					imageUrl: "https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/uni@2x.png",
+					success: function (res) {
+						console.log("success:" + JSON.stringify(res));
+					},
+					fail: function (err) {
+						console.log("fail:" + JSON.stringify(err));
+					}
+				});
+			}
+		},
+		
+		methods: {
+			lookMe(e) {
+				var me = this;
+				var imgIndex = e.currentTarget.dataset.imgindex;
+				uni.previewImage({
+					current: me.plotPicArray[imgIndex],
+					urls: me.plotPicArray
+				})
+			},
+			lookStaff(e) {
+				var me = this;
+				var staffIndex = e.currentTarget.dataset.staffindex;
+				var staffArray = [].concat(me.directArray).concat(me.actorArray)
+				var url = [];
+				// url 为所有照片链接字符串组成的数组
+				for (var i = 0; i < staffArray.length; i++) {
+					url.push(staffArray[i].photo)
+				}
+				console.log(url)
+				uni.previewImage({
+					current: url[staffIndex],
+					urls: url
+				})
+			}			
+		},
+		
 		components:{
 			movieStar
 		}
