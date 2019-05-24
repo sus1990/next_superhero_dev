@@ -3,19 +3,20 @@
 		<view class="header">
 			
 			<!-- 用户头像 -->
-			<view v-if="isLogin">
+			<image :src="userInfo.faceImage" class="face"></image>
+<!-- 			<view v-if="isLogin">
 				<image src="/static/icos/108x108.png" class="face"></image>
 			</view>
 			<view v-else>
-				<image src="http://122.152.205.72:88/group1/M00/00/05/CpoxxFw_-5-AFyVyAABLIH8xBTw233.png" class="face"></image>
-			</view>
+				
+			</view> -->
 
 			<!-- 用户昵称 -->
 			<view class="info-wapper" v-if="isLogin">
 				<view class="nickname">
-					NEXT 学院
+					{{userInfo.nickname}}
 				</view>
-				<view class="nav-info">ID: 123456asdfa</view>
+				<view class="nav-info">ID: {{userInfo.id}}</view>
 			</view>
 			<view class="info-wapper"  v-else>
 				<navigator url="../registLogin/registLogin">
@@ -27,7 +28,9 @@
 			
 			<!-- 用户设置 -->
 			<view class="set-wapper" v-if="isLogin">
-				<image src="/static/icos/settings.png" class="settings"></image>
+				<navigator url="/pages/meInfo/meInfo">
+					<image src="/static/icos/settings.png" class="settings" ></image>
+				</navigator>
 			</view>
 			
 		</view>
@@ -38,11 +41,30 @@
 	export default {
 		data() {
 			return {
-				isLogin: false
+				isLogin: false,
+				userInfo: {
+					"id": "123456789",
+					"nickname": "NEXT 学院",
+					"faceImage": "http://122.152.205.72:88/group1/M00/00/05/CpoxxFw_-5-AFyVyAABLIH8xBTw233.png"
+				}
 			}
 		},
-		methods: {
+		
+		// 每次页面被打开的时候，从缓存中获取数据
+		onShow() {
+			var me = this;
+			var userInfo = me.getGlobalUser("globalUser");
 			
+			if (userInfo != null ) {
+				me.isLogin = true;
+				me.userInfo = userInfo;
+			}else{
+				me.isLogin = false;		
+			}
+		},
+	
+		methods: {
+
 		}
 	}
 </script>

@@ -75,23 +75,27 @@
 				var password = e.detail.value.password;
 				
 				uni.request({
-					url:me.serverUrl + '/user/registOrLogin',
+					url:me.serverUrl + '/user/registOrLogin?qq=649252367',
 					method:"POST",	
-					data: {
-						"userBO": {
-							"password": username,
-							"username": password,
-						},					
-						"qq": "649252367"
+					data: {	
+						"password": password ,
+						"username": username	
 					},
 					success: (res) => {
 						if (res.data.status == 200) {
-							console.log(res)
+							var userInfo = res.data.data;
+							// 同步缓存数据
+							uni.setStorageSync("globalUser", userInfo);
+							
+							// 切换页面跳转
+							uni.switchTab({
+								url: "/pages/me/me"
+							})
 						}
 
 					},
 					complete: (res) => {
-						console.log(res)
+						// console.log(res)
 					}
 				});
 			}
