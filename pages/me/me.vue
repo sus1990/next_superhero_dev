@@ -19,7 +19,7 @@
 				<view class="nav-info">ID: {{userInfo.id}}</view>
 			</view>
 			<view class="info-wapper"  v-else>
-				<navigator url="../registLogin/registLogin">
+				<navigator url="../registLogin/registLogin" hover-class="none">
 					<view class="nickname regist-login">
 						注册/登录
 					</view>
